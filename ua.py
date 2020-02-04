@@ -18,7 +18,7 @@ def date_search(data, start_date, end_date):
 def create_count(less_data):
     # create count and distinct list
     less_data['count'] = less_data.groupby('food_id')['food_id'].transform('count')
-    less_data = less_data[['food_id', 'count']].drop_duplicates()
+    less_data = less_data[['food_id', 'count']].drop_duplicates().sort_values(by=['count'], ascending=False)
 
     return less_data
 
@@ -32,7 +32,7 @@ def create_weight(less_data):
 
     # calculate weight
     less_data['weight'] = ((less_data['count'] * less_data['rank']) / len(less_data)) * 1000
-    less_data = less_data[['food_id', 'weight']].drop_duplicates()
+    less_data = less_data[['food_id', 'weight']].drop_duplicates().sort_values(by=['weight'], ascending=False)
 
     return less_data
 
@@ -45,14 +45,14 @@ if '__main__':
     data = pd.concat([pd.read_csv(f) for f in files])
 
     # constrict data
-    data = date_search(data, '2017-03-01', '2017-03-01')
+    data = date_search(data, '2017-03-01', '2017-09-01')
 
     # create counted object
     count_thing = create_count(data)
-    count_thing.to_csv('test1.csv', index=False, header=True)
+    count_thing.to_csv('food_counted.csv', index=False, header=True)
 
     # create weighted object
     weight_thing = create_weight(data)
-    weight_thing.to_csv('test2.csv', index=False, header=True)
+    weight_thing.to_csv('food_weighted.csv', index=False, header=True)
 
     print(datetime.datetime.now() - start)
