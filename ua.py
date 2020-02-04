@@ -59,16 +59,20 @@ def create_weight(less_data):
 if '__main__':
 
     # create dataframe from .csv log files
+    print("Creating the full data set...")
     files = [i for i in glob('./food_entries/*.csv')]
     data = pd.concat([pd.read_csv(f) for f in files])
 
     # constrict data
+    print("Creating the search results...")
     data = date_search(data, '2017-03-01', '2017-09-01')
 
     # create counted object
+    print("Creating the counted results...")
     count_thing = create_count(data)
     count_thing.to_csv('food_counted.csv', index=False, header=True)
 
     # create weighted object
+    print("Creating the weighted results...")
     weight_thing = create_weight(data)
     weight_thing.to_csv('food_weighted.csv', index=False, header=True)
